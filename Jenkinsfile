@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/<your-username>/ci-testing-project.git'
+                    url: 'https://github.com/Dhengre/ci-testing-project.git'
             }
         }
 

@@ -7,22 +7,22 @@ pipeline {
     }
 
     stages {
-        checkout([$class: 'GitSCM', 
-          branches: [[name: '*/main']], 
-          userRemoteConfigs: [[url: 'https://github.com/Dhengre/ci-testing-project.git']]])
-
+        stage('Checkout') {
+            steps {
+                checkout scm
             }
         }
 
         stage('Build & Test') {
             steps {
-                sh 'mvn clean test -U'
+                sh 'mvn -q test'
             }
         }
+    }
 
-        stage('Publish Results') {
-            steps {
-                junit '**/target/surefire-reports/*.xml'
+    post {
+        always {
+            junit 'target/surefire-reports/*.xml'
             }
         }
     }

@@ -1,34 +1,47 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven3'   // must match the name in Global Tool Configuration
-        jdk 'JDK17'      // must match the name in Global Tool Configuration
+    // Poll Git SCM every minute
+    triggers {
+        pollSCM('* * * * *')
+    }
+
+    environment {
+        // Example environment variable for tests
+        ENV = 'dev'
     }
 
     stages {
         stage('Checkout') {
             steps {
+                // Checkout the code from SCM
                 checkout scm
             }
         }
 
         stage('Build & Test') {
             steps {
-                sh 'mvn -q test'
+                // Run Maven tests quietly
+                sh 'mvn -q clean test'
             }
         }
     }
 
     post {
         always {
+            // Publish JUnit test results
             junit 'target/surefire-reports/*.xml'
-            }
+            
+            // Optional: minimal console message
+            echo "Pipeline finished. Check test results above."
         }
-    }
 
-    post {
-        success { echo 'Tests passed!' }
-        failure { echo 'Tests failed!' }
+        success {
+            echo "Build and tests succeeded!"
+        }
+
+        failure {
+            echo "Build or tests failed!"
+        }
     }
 }

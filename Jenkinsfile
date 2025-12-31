@@ -2,41 +2,32 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven-3.9'
-        jdk 'Java-17'
+        maven 'Maven3'   // must match the name in Global Tool Configuration
+        jdk 'JDK17'      // must match the name in Global Tool Configuration
     }
 
     stages {
-
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/Dhengre/ci-testing-project.git'
+                git 'https://github.com/Dhengre/ci-testing-project.git'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build & Test') {
             steps {
-                sh 'docker build -t ci-test-image .'
+                sh 'mvn clean test -U'
             }
         }
 
-        stage('Run Tests in Docker') {
+        stage('Publish Results') {
             steps {
-                sh 'docker run --rm ci-test-image'
+                junit '**/target/surefire-reports/*.xml'
             }
         }
     }
 
     post {
-        always {
-            echo 'Pipeline finished'
-        }
-        success {
-            echo 'All tests passed'
-        }
-        failure {
-            echo 'Tests failed'
-        }
+        success { echo 'Tests passed!' }
+        failure { echo 'Tests failed!' }
     }
 }

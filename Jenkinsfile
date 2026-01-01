@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven'   // Jenkins Global Tool Configuration name
+        maven 'Maven3'
     }
 
     options {
-        timestamps()   // Show timestamps in console
+        timestamps()
     }
 
     stages {
@@ -22,7 +22,6 @@ pipeline {
             steps {
                 echo 'Running Maven build and tests...'
 
-                // catchError ensures console output is shown even if tests fail
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     sh '''
                         echo "====================================="
@@ -39,9 +38,7 @@ pipeline {
     }
 
     post {
-
         always {
-            echo 'Publishing test reports...'
             junit 'target/surefire-reports/*.xml'
             echo 'Pipeline execution finished!'
         }

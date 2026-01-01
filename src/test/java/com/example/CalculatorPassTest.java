@@ -34,7 +34,7 @@ public class CalculatorPassTest {
     @Test
     public void testDivide() {
         int expected = 5;
-        int actual = calc.divide(1, 2);
+        int actual = calc.divide(10, 2);
 
         System.out.println("PASS TEST: Division");
         System.out.println("Expected = " + expected);

@@ -16,7 +16,7 @@ public class CalculatorTest {
 
     @Test
     public void testAddNegative() {
-        Assert.assertEquals(add(-6, -6), -11);
+        Assert.assertEquals(add(-6, -6), -12);
     }
 }
  

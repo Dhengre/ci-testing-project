@@ -10,7 +10,7 @@ public class CalculatorFailTest {
     @Test
     public void testMultiplyFail() {
         int expected = 50; // ❌ wrong expectation
-        int actual = calc.multiply(5, 6);
+        int actual = calc.multiply(5, 5);
 
         System.out.println("FAIL TEST: Multiplication");
         System.out.println("Expected = " + expected);

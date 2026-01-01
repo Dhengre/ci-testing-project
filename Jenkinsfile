@@ -2,53 +2,48 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'
-    }
-
-    options {
-        timestamps()
+        maven 'Maven3'   // Must match Jenkins Global Tool Configuration
     }
 
     stages {
 
-        stage('Checkout Source') {
+        stage('Checkout Source Code') {
             steps {
-                echo 'Checking out source code from GitHub...'
+                echo '📥 Checking out code from GitHub...'
                 checkout scm
             }
         }
 
-        stage('Build & Test') {
+        stage('Build & Run Tests') {
             steps {
-                echo 'Running Maven build and tests...'
-
-                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    sh '''
-                        echo "====================================="
-                        echo " Starting Maven Clean Test "
-                        echo "====================================="
-                        mvn clean test
-                        echo "====================================="
-                        echo " Maven execution completed "
-                        echo "====================================="
-                    '''
-                }
+                echo '🧪 Running Maven build and tests...'
+                sh '''
+                    echo "----------------------------------------"
+                    echo "Starting Maven Clean & Test"
+                    echo "----------------------------------------"
+                    mvn clean test
+                '''
             }
         }
     }
 
     post {
-        always {
-            junit 'target/surefire-reports/*.xml'
-            echo 'Pipeline execution finished!'
-        }
 
         success {
-            echo 'BUILD SUCCESS ✅'
+            echo '✅ BUILD SUCCESS'
+            echo '🎉 All test cases PASSED'
         }
 
         failure {
-            echo 'BUILD FAILED ❌ - Check test results above'
+            echo '❌ BUILD FAILED'
+            echo '⚠️ One or more test cases FAILED'
+            echo '👉 Check test output above for details'
+        }
+
+        always {
+            echo '📄 Publishing test reports...'
+            junit 'target/surefire-reports/*.xml'
+            echo '🏁 Pipeline execution finished'
         }
     }
 }

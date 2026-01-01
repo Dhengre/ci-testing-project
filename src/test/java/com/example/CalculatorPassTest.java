@@ -22,7 +22,7 @@ public class CalculatorPassTest {
     @Test
     public void testSubtract() {
         int expected = 4;
-        int actual = calc.subtract(7, 3);
+        int actual = calc.subtract(7, 4);
 
         System.out.println("PASS TEST: Subtraction");
         System.out.println("Expected = " + expected);
@@ -30,7 +30,7 @@ public class CalculatorPassTest {
 
         Assert.assertEquals(actual, expected);
     }
-
+ 
     @Test
     public void testDivide() {
         int expected = 5;

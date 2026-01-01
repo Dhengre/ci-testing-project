@@ -11,11 +11,11 @@ public class CalculatorTest {
 
     @Test
     public void testAddPositive() {
-        Assert.assertEquals(add(2, 2), 5);
+        Assert.assertEquals(add(1, 1), 5);
     }
 
     @Test
     public void testAddNegative() {
-        Assert.assertEquals(add(-2, -2), -5);
+        Assert.assertEquals(add(-1, -1), -5);
     }
 }

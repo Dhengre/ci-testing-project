@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: selenium-tests
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      containers:
+      - name: selenium
+        image: selenium-tests:latest
+        command: ["mvn", "clean", "test"]
+      restartPolicy: Never

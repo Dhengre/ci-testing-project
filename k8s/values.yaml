@@ -1,0 +1,5 @@
+image:
+  repository: dhengre/ci-testing-app
+  tag: latest
+
+replicaCount: 2

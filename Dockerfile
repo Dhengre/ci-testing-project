@@ -1,11 +1,12 @@
 FROM maven:3.9.6-eclipse-temurin-17
 
-WORKDIR /automation
+RUN apt-get update && \
+    apt-get install -y chromium chromium-driver
 
-COPY pom.xml .
-RUN mvn dependency:go-offline
+ENV CHROME_BIN=/usr/bin/chromium
 
-COPY src ./src
-COPY testng.xml .
+WORKDIR /app
 
-CMD ["mvn", "test"]
+COPY . .
+
+CMD ["mvn", "clean", "test"]

@@ -1,12 +1,4 @@
-FROM maven:3.9.6-eclipse-temurin-17
-
-RUN apt-get update && \
-    apt-get install -y chromium chromium-driver
-
-ENV CHROME_BIN=/usr/bin/chromium
-
+FROM openjdk:17
 WORKDIR /app
-
-COPY . .
-
-CMD ["mvn", "clean", "test"]
+COPY target/*.jar app.jar
+ENTRYPOINT ["java","-jar","app.jar"]

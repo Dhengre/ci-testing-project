@@ -4,41 +4,32 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/<user>/selenium-k8s-ci.git'
+                git 'https://github.com/Dhengre/ci-testing-project.git'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build') {
             steps {
-                sh 'docker build -t selenium-tests .'
+                sh 'mvn clean compile'
             }
         }
 
-        stage('Push Image') {
+        stage('QA Tests') {
             steps {
-                sh '''
-                docker tag selenium-tests registry/selenium-tests:latest
-                docker push registry/selenium-tests:latest
-                '''
+                sh 'mvn test'
             }
         }
 
-        stage('Run Tests on Kubernetes') {
+        stage('Docker Build') {
             steps {
-                sh '''
-                kubectl apply -f selenium-test-job.yaml
-                kubectl wait --for=condition=complete job/selenium-tests
-                '''
+                sh 'docker build -t ci-testing-app .'
             }
         }
-    }
 
-    post {
-        success {
-            echo 'K8s Selenium Tests Passed'
-        }
-        failure {
-            echo 'K8s Selenium Tests Failed'
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f k8s/'
+            }
         }
     }
 }

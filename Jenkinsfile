@@ -1,49 +1,39 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven3'   // Must match Jenkins Global Tool Configuration
-    }
-
     stages {
 
-        stage('Checkout Source Code') {
+        stage('Checkout') {
             steps {
-                echo '📥 Checking out code from GitHub...'
-                checkout scm
+                git url: 'https://github.com/your-org/selenium-docker-ci.git',
+                    branch: 'main'
             }
         }
 
-        stage('Build & Run Tests') {
+        stage('Build Docker Image') {
             steps {
-                echo '🧪 Running Maven build and tests...'
-                sh '''
-                    echo "----------------------------------------"
-                    echo "Starting Maven Clean & Test"
-                    echo "----------------------------------------"
-                    mvn clean test
-                '''
+                sh 'docker build -t selenium-tests:latest .'
+            }
+        }
+
+        stage('Run Automation Tests') {
+            steps {
+                sh 'docker run --rm selenium-tests:latest'
+            }
+            post {
+                always {
+                    junit '**/surefire-reports/*.xml'
+                }
             }
         }
     }
 
     post {
-
         success {
-            echo '✅ BUILD SUCCESS'
-            echo '🎉 All test cases PASSED'
+            echo '✅ Automation Passed'
         }
-
         failure {
-            echo '❌ BUILD FAILED'
-            echo '⚠️ One or more test cases FAILED'
-            echo '👉 Check test output above for details'
-        }
-
-        always {
-            echo '📄 Publishing test reports...'
-            junit 'target/surefire-reports/*.xml'
-            echo '🏁 Pipeline execution finished'
+            echo '❌ Automation Failed'
         }
     }
 }
